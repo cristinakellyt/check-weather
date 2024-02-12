@@ -15,6 +15,7 @@ import axios from 'axios'
 import { ref } from 'vue'
 
 const savedCities = ref([])
+const weatherAPIKey = 'c80de8e20aa4237d0549ff80765920ea'
 const getCities = async () => {
   if (localStorage.getItem('savedCities')) {
     savedCities.value = JSON.parse(localStorage.getItem('savedCities'))
@@ -24,7 +25,7 @@ const getCities = async () => {
     savedCities.value.forEach((city) => {
       request.push(
         axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${city.coords.lat}&lon=${city.coords.lng}&appid=c80de8e20aa4237d0549ff80765920ea&units=metric`
+          `https://api.openweathermap.org/data/2.5/weather?lat=${city.coords.lat}&lon=${city.coords.lng}&appid=${weatherAPIKey}&units=metric`
         )
       )
     })

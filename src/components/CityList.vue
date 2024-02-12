@@ -31,6 +31,7 @@ const getCities = async () => {
 
     const weatherData = await axios.all(request)
 
+    console.log(weatherData)
     weatherData.forEach((value, index) => {
       savedCities.value[index].weather = value.data
     })
@@ -44,7 +45,7 @@ const goToCityView = (city) => {
   router.push({
     name: 'cityView',
     params: { state: city.state, city: city.city },
-    query: { lat: city.coords.lat, lng: city.coords.lng }
+    query: { id: city.id, lat: city.coords.lat, lng: city.coords.lng }
   })
 }
 </script>

@@ -6,15 +6,27 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('@/views/HomeView.vue')
+      component: () => import('@/views/HomeView.vue'),
+      meta: {
+        title: 'Home'
+      }
     },
     {
       path: '/weather/:state/:city',
       name: 'cityView',
       component: () => import('@/views/CityView.vue'),
+      meta: {
+        title: 'Weather'
+      },
       props: true
     }
   ]
 })
 
+router.beforeEach((to, from, next) => {
+  document.title = `${
+    to.params.state ? `${to.params.city}, ${to.params.state}` : to.meta.title
+  } | The Local Weather`
+  next()
+})
 export default router

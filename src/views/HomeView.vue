@@ -34,7 +34,7 @@
       <Suspense>
         <CityList />
         <template #fallback>
-          <CityCardSkeleton />
+          <LoadingCityCard />
         </template>
       </Suspense>
     </div>
@@ -43,7 +43,7 @@
 
 <script setup lang="ts">
 import CityList from '@/components/CityList.vue'
-import CityCardSkeleton from '@/components/CityCardSkeleton.vue'
+import LoadingCityCard from '@/components/async-animation/LoadingCityCard.vue'
 import axios from 'axios'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'

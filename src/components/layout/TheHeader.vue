@@ -21,7 +21,7 @@
           class="fa-solid fa-plus text-xl hover:text-weather-secondary duration-150 cursor-pointer"
         ></i>
       </div>
-      <BaseModal :modalActive="modalActive" @closeModal="toggleModal">
+      <base-modal :modalActive="modalActive" @closeModal="toggleModal">
         <div class="text-black">
           <h1 class="text-2xl mb-1">About:</h1>
           <p class="mb-4">
@@ -47,13 +47,12 @@
             the bottom of the page, there will be am option to delete the city.
           </p>
         </div>
-      </BaseModal>
+      </base-modal>
     </nav>
   </header>
 </template>
 
 <script setup>
-import BaseModal from '@/components/BaseModal.vue'
 import { uid } from 'uid'
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'

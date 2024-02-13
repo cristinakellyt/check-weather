@@ -1,5 +1,6 @@
 import './assets/tailwind.css'
 
+import BaseModal from '@/components/ui/BaseModal.vue'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
@@ -11,4 +12,5 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 
+app.component('base-modal', BaseModal)
 app.mount('#app')

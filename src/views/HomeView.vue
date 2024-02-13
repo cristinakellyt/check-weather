@@ -22,7 +22,7 @@
           <li
             v-for="result in mapboxSearchResults"
             :key="result.id"
-            @click="previewCity(result)"
+            @click="openCityWeather(result)"
             class="py-2 cursor-pointer"
           >
             {{ result.place_name }}
@@ -44,17 +44,24 @@
 <script setup lang="ts">
 import CityList from '@/components/CityList.vue'
 import LoadingCityCard from '@/components/async-animation/LoadingCityCard.vue'
-import axios from 'axios'
+import { useSearchLocationStore } from '@/stores/searchLocationStore'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-const mapboxAPIKey =
-  'pk.eyJ1IjoiY3Jpc3RpbmFrIiwiYSI6ImNsc2l3NnZzazE5ZGEya3F0bmZpaG5jaGIifQ.XHAmegdsFb_CqekE5Etg2w'
+interface LocationData {
+  id: string
+  place_name: string
+  coordinates: number[]
+}
 
-const mapboxSearchResults = ref()
+type MapboxSearchResults = LocationData[] | null
+
+const mapboxSearchResults = ref<MapboxSearchResults>(null)
 const searchQuery = ref('')
 const queryTimeout = ref()
 const searchError = ref(false)
+
+const searchLocationStore = useSearchLocationStore()
 
 const getSearchResults = () => {
   clearTimeout(queryTimeout.value)
@@ -62,10 +69,8 @@ const getSearchResults = () => {
   queryTimeout.value = setTimeout(async () => {
     if (searchQuery.value !== '') {
       try {
-        const result = await axios.get(
-          `https://api.mapbox.com/geocoding/v5/mapbox.places/${searchQuery.value}.json?access_token=${mapboxAPIKey}&types=place`
-        )
-        mapboxSearchResults.value = result.data.features
+        const response = await searchLocationStore.fetchLocations(searchQuery.value)
+        mapboxSearchResults.value = response
       } catch {
         searchError.value = true
       }
@@ -75,16 +80,9 @@ const getSearchResults = () => {
   }, 300)
 }
 
-interface SearchResult {
-  place_name: string
-  geometry: {
-    coordinates: [number, number]
-  }
-}
-
 const router = useRouter()
 
-const previewCity = (searchResult: SearchResult) => {
+const openCityWeather = (searchResult: LocationData) => {
   const [city, state] = searchResult.place_name.split(',')
   console.log(city, state)
 
@@ -92,8 +90,8 @@ const previewCity = (searchResult: SearchResult) => {
     name: 'cityView',
     params: { state: state.split(' ').join(''), city },
     query: {
-      lat: searchResult.geometry.coordinates[1],
-      lng: searchResult.geometry.coordinates[0],
+      lat: searchResult.coordinates[1],
+      lng: searchResult.coordinates[0],
       preview: true
     }
   })

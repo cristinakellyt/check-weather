@@ -10,36 +10,31 @@
 
 <script setup>
 import CityCard from '@/components/CityCard.vue'
+import { useLocationWeatherStore } from '@/stores/locationWeatherStore.ts'
 import { useRouter } from 'vue-router'
-import axios from 'axios'
 import { ref } from 'vue'
 
 const savedCities = ref([])
-const weatherAPIKey = 'c80de8e20aa4237d0549ff80765920ea'
+
+const locationWeatherStore = useLocationWeatherStore()
+
 const getCities = async () => {
   if (localStorage.getItem('savedCities')) {
     savedCities.value = JSON.parse(localStorage.getItem('savedCities'))
 
-    const request = []
-
-    savedCities.value.forEach((city) => {
-      request.push(
-        axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${city.coords.lat}&lon=${city.coords.lng}&appid=${weatherAPIKey}&units=metric`
-        )
-      )
+    const request = savedCities.value.map((city) => {
+      return locationWeatherStore.fetchCurrentWeather(city.coords.lat, city.coords.lng)
     })
 
-    const weatherData = await axios.all(request)
+    try {
+      const weatherData = await Promise.all(request)
 
-    console.log(weatherData)
-
-    //Flicker Delay
-    await new Promise((res) => setTimeout(res, 1000))
-
-    weatherData.forEach((value, index) => {
-      savedCities.value[index].weather = value.data
-    })
+      weatherData.forEach((value, index) => {
+        savedCities.value[index].weather = value.main
+      })
+    } catch (error) {
+      console.error('Error fetching weather:', error)
+    }
   }
 }
 

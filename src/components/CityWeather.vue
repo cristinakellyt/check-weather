@@ -103,42 +103,42 @@
 </template>
 
 <script setup lang="ts">
+import { useLocationWeatherStore } from '@/stores/locationWeatherStore'
 import { useRoute, useRouter } from 'vue-router'
-import axios from 'axios'
 
 const route = useRoute()
 
-const weatherAPIKey = 'c80de8e20aa4237d0549ff80765920ea'
+const locationWeatherStore = useLocationWeatherStore()
 
 const getWeatherData = async () => {
-  console.log(route.query)
   try {
-    const weatherData = await axios.get(
-      `https://api.openweathermap.org/data/3.0/onecall?lat=${route.query.lat}&lon=${route.query.lng}&exclude={part}&appid=${weatherAPIKey}&units=metric`
-    )
+    if (route.query.lat !== null && route.query.lng !== null) {
+      const data = await locationWeatherStore.fetchWeatherInfo(+route.query.lat, +route.query.lng)
 
-    // cal current date & time
-    const localOffset = new Date().getTimezoneOffset() * 60000
-    const utc = weatherData.data.current.dt * 1000 + localOffset
-    weatherData.data.currentTime = utc + 1000 * weatherData.data.timezone_offset
+      // cal current date & time
+      const localOffset = new Date().getTimezoneOffset() * 60000
+      const utc = data.current.dt * 1000 + localOffset
+      data.currentTime = utc + 1000 * data.timezone_offset
 
-    // cal hourly weather offset
-    weatherData.data.hourly.forEach((hour: any) => {
-      const utc = hour.dt * 1000 + localOffset
-      hour.currentTime = utc + 1000 * weatherData.data.timezone_offset
-    })
+      // cal hourly weather offset
+      data.hourly.forEach((hour: any) => {
+        const utc = hour.dt * 1000 + localOffset
+        hour.currentTime = utc + 1000 * data.timezone_offset
+      })
 
-    //Flicker Delay
-    await new Promise((res) => setTimeout(res, 1000))
-
-    return weatherData.data
+      // Flicker Delay
+      await new Promise((res) => setTimeout(res, 1000))
+      return data
+    } else {
+      console.error('Latitude or longitude is null')
+      return null // or throw an error, depending on your use case
+    }
   } catch (err) {
     console.log(err)
   }
 }
 
 const weatherData = await getWeatherData()
-console.log(weatherData)
 
 const router = useRouter()
 const removeCity = () => {

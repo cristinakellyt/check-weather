@@ -1,26 +1,20 @@
 <template>
   <main class="container text-white">
     <div class="pt-4 mb-8 relative">
-      <input
-        type="text"
-        @input="getSearchResults"
-        v-model="searchQuery"
-        placeholder="Search for a city or state"
-        class="py-2 px-1 w-full bg-transparent border-b focus:border-weather-secondary focus:outline-none focus:shadow-[0px_1px_0_0_#004E71]"
-      />
+      <SearchBar @searchQuery="getSearchResults" />
       <ul
-        v-if="mapboxSearchResults"
+        v-if="locationsResult"
         class="absolute bg-weather-secondary text-white w-full shadow-md py-2 px-1 top-[66px]"
       >
         <p v-if="searchError">Sorry, something went wrong, please try again.</p>
 
-        <p v-if="!searchError && mapboxSearchResults.length === 0">
+        <p v-if="!searchError && locationsResult.length === 0">
           No results match your search, try a different term.
         </p>
 
         <template v-else>
           <li
-            v-for="result in mapboxSearchResults"
+            v-for="result in locationsResult"
             :key="result.id"
             @click="openCityWeather(result)"
             class="py-2 cursor-pointer"
@@ -44,6 +38,7 @@
 <script setup lang="ts">
 import CityList from '@/components/CityList.vue'
 import LoadingCityCard from '@/components/async-animation/LoadingCityCard.vue'
+import SearchBar from '@/components/ui/SearchBar.vue'
 import { useSearchLocationStore } from '@/stores/searchLocationStore'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -54,38 +49,31 @@ interface LocationData {
   coordinates: number[]
 }
 
-type MapboxSearchResults = LocationData[] | null
+type LocationResult = LocationData[] | null
 
-const mapboxSearchResults = ref<MapboxSearchResults>(null)
-const searchQuery = ref('')
-const queryTimeout = ref()
+const locationsResult = ref<LocationResult>(null)
 const searchError = ref(false)
 
 const searchLocationStore = useSearchLocationStore()
 
-const getSearchResults = () => {
-  clearTimeout(queryTimeout.value)
-
-  queryTimeout.value = setTimeout(async () => {
-    if (searchQuery.value !== '') {
-      try {
-        const response = await searchLocationStore.fetchLocations(searchQuery.value)
-        mapboxSearchResults.value = response
-      } catch {
-        searchError.value = true
-      }
-      return
+const getSearchResults = async (searchInput: string) => {
+  if (searchInput !== '') {
+    try {
+      const response = await searchLocationStore.fetchLocations(searchInput)
+      locationsResult.value = response
+    } catch {
+      searchError.value = true
     }
-    mapboxSearchResults.value = null
-  }, 300)
+    return
+  } else {
+    locationsResult.value = null
+  }
 }
 
 const router = useRouter()
 
 const openCityWeather = (searchResult: LocationData) => {
   const [city, state] = searchResult.place_name.split(',')
-  console.log(city, state)
-
   router.push({
     name: 'cityView',
     params: { state: state.split(' ').join(''), city },

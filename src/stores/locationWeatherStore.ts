@@ -14,9 +14,20 @@ interface SavedCities {
   weather?: {}
 }
 
+function isValidSavedCity(item: any): item is SavedCities {
+  return (
+    typeof item.id === 'string' &&
+    typeof item.state === 'string' &&
+    typeof item.city === 'string' &&
+    item.coords &&
+    typeof item.coords.lat === 'string' &&
+    typeof item.coords.lng === 'string'
+  )
+}
+
 export const useLocationWeatherStore = defineStore('locationWeather', {
   state: () => ({
-    savedCities: JSON.parse(localStorage.getItem('savedCities') ?? '') as SavedCities[]
+    savedCities: initializeSavedCities()
   }),
   getters: {
     getSavedCities(): SavedCities[] {
@@ -81,3 +92,27 @@ export const useLocationWeatherStore = defineStore('locationWeather', {
     }
   }
 })
+
+function initializeSavedCities(): SavedCities[] {
+  const savedCitiesString = localStorage.getItem('savedCities')
+
+  if (savedCitiesString) {
+    try {
+      const parsedData = JSON.parse(savedCitiesString)
+
+      if (Array.isArray(parsedData)) {
+        return parsedData.filter((item: any) => {
+          return isValidSavedCity(item)
+        })
+      } else {
+        console.error('Invalid data format in localStorage: Not an array')
+      }
+    } catch (error) {
+      console.error('Error parsing JSON data from localStorage:', error)
+    }
+  } else {
+    console.warn('No data found in localStorage for savedCities')
+  }
+
+  return []
+}

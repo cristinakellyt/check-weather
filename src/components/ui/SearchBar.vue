@@ -1,6 +1,7 @@
 <template>
   <div>
     <input
+      id="search"
       type="text"
       @input="getSearchResults"
       v-model="searchQuery"

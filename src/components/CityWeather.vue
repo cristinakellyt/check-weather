@@ -112,8 +112,11 @@ const locationWeatherStore = useLocationWeatherStore()
 
 const getWeatherData = async () => {
   try {
-    if (route.query.lat !== null && route.query.lng !== null) {
-      const data = await locationWeatherStore.fetchWeatherInfo(+route.query.lat, +route.query.lng)
+    const lat = Array.isArray(route.query) ? route.query[0] : route.query.lat
+    const lng = Array.isArray(route.query) ? route.query[1] : route.query.lng
+
+    if (lat !== null && lng !== null) {
+      const data = await locationWeatherStore.fetchWeatherInfo(lat, lng)
 
       // cal current date & time
       const localOffset = new Date().getTimezoneOffset() * 60000
@@ -142,7 +145,8 @@ const weatherData = await getWeatherData()
 
 const router = useRouter()
 const removeCity = () => {
-  locationWeatherStore.removeCity(route.query.id)
+  const cityId = Array.isArray(route.query) ? route.query[2] : route.query.id
+  locationWeatherStore.removeCity(cityId)
   router.push({
     name: 'home'
   })

@@ -19,7 +19,7 @@ const savedCities = ref([])
 const locationWeatherStore = useLocationWeatherStore()
 
 const getCities = async () => {
-  savedCities.value = await locationWeatherStore.getSavedCurrentWeatherCities
+  savedCities.value = await locationWeatherStore.fetchSavedCurrentWeatherCities()
 }
 
 onMounted(async () => {

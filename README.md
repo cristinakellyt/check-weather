@@ -1,25 +1,42 @@
-# check-weather
+# Check Weather
 
-This template should help get you started developing with Vue 3 in Vite.
+This is an in-progress project where I used Vue3.js to create an application where the user can see the weather information of a location by searching it by name. It also allows users to save cities and view their current weather on the home page.
 
-## Recommended IDE Setup
+## Table of contents
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+- [Overview](#overview)
+  - [Expected Behaviour](#expected-behaviour)
+  - [Links](#links)
+- [My process](#my-process)
+  - [Built with](#built-with)
+- [Project Setup](#project-setup)
 
-## Type Support for `.vue` Imports in TS
+## Overview
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+### Expected Behaviour
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+- General
+  -The user should be able to search for a city and receive suggestions based on what it was typed in search bar
+  -The user can see how the app works by clicking in the info icon based on the top right header
+  -When one city is selected, the app redirects the user to the view of the weather information and forecast
+  -When plus icon is clicked, it means the user can track this city, so a card with current weather information is added in the home page
+  -It is possible to remove the tracked city from the list by clicking in the remove button in the end of the weather view page
 
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+### Links
 
-## Customize configuration
+- Live Site URL: [https://ck-check-weather.netlify.app/](https://ck-check-weather.netlify.app/)
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+## My process
+
+### Built with
+
+- Semantic HTML5 markup
+- Tailwind CSS
+- Vue3.js
+- Typescript
+- Pinia
+- Local Storage
+- Axios
 
 ## Project Setup
 
@@ -31,16 +48,4 @@ npm install
 
 ```sh
 npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
 ```

@@ -110,8 +110,6 @@ function initializeSavedCities(): SavedCities[] {
     } catch (error) {
       console.error('Error parsing JSON data from localStorage:', error)
     }
-  } else {
-    console.warn('No data found in localStorage for savedCities')
   }
 
   return []

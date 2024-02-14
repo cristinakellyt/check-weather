@@ -53,6 +53,7 @@
 </template>
 
 <script setup>
+import { useLocationWeatherStore } from '@/stores/locationWeatherStore.ts'
 import { uid } from 'uid'
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -63,15 +64,11 @@ const toggleModal = () => {
   modalActive.value = !modalActive.value
 }
 
-const savedCities = ref([])
+const locationWeatherStore = useLocationWeatherStore()
 
 const route = useRoute()
 const router = useRouter()
 const addCity = () => {
-  if (localStorage.getItem('savedCities')) {
-    savedCities.value = JSON.parse(localStorage.getItem('savedCities'))
-  }
-
   const locationObj = {
     id: uid(),
     state: route.params.state,
@@ -82,9 +79,7 @@ const addCity = () => {
     }
   }
 
-  savedCities.value.push(locationObj)
-
-  localStorage.setItem('savedCities', JSON.stringify(savedCities.value))
+  locationWeatherStore.saveCity(locationObj)
 
   let query = Object.assign({}, route.query)
   delete query.preview

@@ -1,6 +1,6 @@
 import './assets/tailwind.css'
 
-import BaseModal from '@/components/ui/BaseModal.vue'
+import BaseModal from '@/components/common/BaseModal.vue'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 

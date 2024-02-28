@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import CityList from '@/components/CityList.vue'
 import LoadingCityCard from '@/components/async-animation/LoadingCityCard.vue'
-import SearchBar from '@/components/ui/SearchBar.vue'
+import SearchBar from '@/components/common/SearchBar.vue'
 import { useSearchLocationStore } from '@/stores/searchLocationStore'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'

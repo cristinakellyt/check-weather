@@ -19,6 +19,6 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AnimatedPlaceholder from '@/components/async-animation/AnimatedPlaceholder.vue'
 </script>

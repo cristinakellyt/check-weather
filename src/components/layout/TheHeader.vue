@@ -52,8 +52,8 @@
   </header>
 </template>
 
-<script setup>
-import { useLocationWeatherStore } from '@/stores/locationWeatherStore.ts'
+<script setup lang="ts">
+import { useLocationWeatherStore } from '@/stores/locationWeatherStore'
 import { uid } from 'uid'
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -69,21 +69,23 @@ const locationWeatherStore = useLocationWeatherStore()
 const route = useRoute()
 const router = useRouter()
 const addCity = () => {
-  const locationObj = {
-    id: uid(),
-    state: route.params.state,
-    city: route.params.city,
-    coords: {
-      lat: route.query.lat,
-      lng: route.query.lng
+  if (route.query.lat && route.query.lng) {
+    const locationObj = {
+      id: uid(),
+      state: route.params.state.toString(),
+      city: route.params.city.toString(),
+      coords: {
+        lat: route.query.lat?.toString(),
+        lng: route.query.lng?.toString()
+      }
     }
+
+    locationWeatherStore.saveCity(locationObj)
+
+    let query = Object.assign({}, route.query)
+    delete query.preview
+    query.id = locationObj.id
+    router.replace({ query })
   }
-
-  locationWeatherStore.saveCity(locationObj)
-
-  let query = Object.assign({}, route.query)
-  delete query.preview
-  query.id = locationObj.id
-  router.replace({ query })
 }
 </script>

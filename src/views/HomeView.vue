@@ -64,7 +64,6 @@ const getSearchResults = async (searchInput: string) => {
     } catch {
       searchError.value = true
     }
-    return
   } else {
     locationsResult.value = null
   }
@@ -76,11 +75,11 @@ const openCityWeather = (searchResult: LocationData) => {
   const [city, state] = searchResult.place_name.split(',')
   router.push({
     name: 'cityView',
-    params: { state: state.split(' ').join(''), city },
+    params: { state, city },
     query: {
       lat: searchResult.coordinates[1],
       lng: searchResult.coordinates[0],
-      preview: true
+      preview: 'true'
     }
   })
 }
